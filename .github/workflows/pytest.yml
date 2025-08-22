@@ -1,6 +1,7 @@
 name: Run Pytest on Windows
 
 on:
+  worflow_dispatch:
   pull_request:
     branches:
       - main  # Führt die Tests bei jedem Pull Request auf den main-Branch aus
