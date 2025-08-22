@@ -1,0 +1,42 @@
+name: Demo-Umgebungsvariablen
+
+on:
+  workflow_dispatch:
+
+jobs:
+  env-demo:
+    runs-on: windows-latest
+    steps:
+      - name: Zeige die Temp-Dateien von GitHub
+        shell: pwsh
+        run: |
+          Write-Host "GITHUB_ENV: $env:GITHUB_ENV"
+          Write-Host "GITHUB_OUTPUT: $env:GITHUB_OUTPUT"
+          Write-Host "-> Diese Pfade sind temporäre Dateien, in die man Variablen schreiben muss."
+
+      - name: Schreibe Variable in GITHUB_ENV
+        shell: pwsh
+        run: |
+          echo "MY_ENV_VAR=Hallo aus ENV-Datei" >> $env:GITHUB_ENV
+
+      - name: Nutze die ENV-Variable
+        shell: pwsh
+        run: |
+          Write-Host "MY_ENV_VAR = $env:MY_ENV_VAR"
+
+      - name: Setze einen Output (für andere Steps/Jobs)
+        id: step1
+        shell: pwsh
+        run: |
+          echo "my_output=Wert aus Step1" >> $env:GITHUB_OUTPUT
+
+      - name: Lese den Output
+        shell: pwsh
+        run: |
+          Write-Host "Über Step-Output: ${{ steps.step1.outputs.my_output }}"
+
+      - name: Vergleich mit bash (nur zur Demo, läuft auch auf Windows)
+        shell: bash
+        run: |
+          echo "In bash greift man so auf Variablen zu:"
+          echo "MY_ENV_VAR = $MY_ENV_VAR"
